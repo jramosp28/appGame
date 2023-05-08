@@ -4,6 +4,7 @@ import './Home.css';
 
 function Home() {
   return (
+
     <div className="container1">
       <h1>Bienvenido a mis Juegos Online </h1>
       <nav>
@@ -13,6 +14,9 @@ function Home() {
           </li>
           <li>
             <Link to="/game2">Tamagotchi</Link>
+          </li>
+          <li>
+            <Link to="/records">Records</Link>
           </li>
         </ul>
       </nav>

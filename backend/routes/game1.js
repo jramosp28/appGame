@@ -21,10 +21,9 @@ router.get("/:_id", async (req, res) => {
 // Crear un nuevo juego
 router.post("/", async (req, res) => {
   try {
-    const game = new Game1(req.body);
-    await game.save();
-    res.status(201).json(game);
-    console.log("juego creado!");
+    const gameData = req.body;
+    await GameController.createGameInDatabase(gameData);
+    res.status(201).json({ message: 'Juego creado exitosamente' });
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -53,5 +52,6 @@ router.delete("/:id", async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 });
+
 
 module.exports = router;
