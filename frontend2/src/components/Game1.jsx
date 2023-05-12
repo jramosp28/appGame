@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import './Game1.css';
-
+// import axios from 'axios';
 const options = [
     { id: 0, name: "Piedra", emoji: "✊", beats: [2, 3] },
     { id: 1, name: "Papel", emoji: "🧻", beats: [0] },
@@ -42,7 +42,7 @@ function useChoices() {
     const [result, setResult] = useState(null);
     const [disabled, setDisabled] = useState(false);
     const [gameOver, setGameOver] = useState(false);
-    const [playerName, setPlayerName] = useState('');
+    const [playerName, setPlayerName] = useState('usuario');
 
 
     useEffect(() => {
@@ -60,35 +60,81 @@ function useChoices() {
             );
         }
     }, [computerChoice]);
-
+    const postData = async () => {
+        const data = {
+            fechaHora: new Date().toISOString(),
+            nombre: playerName,
+            resultado: result === 1 ? 'victoria' : result === 2 ? 'derrota' : 'empate'
+        };
+        try {
+            const response = await axios.post('http://localhost:3000/game1', data);
+            console.log("RESPONSE", response.data);
+        } catch (err) {
+            console.log(err);
+        }
+    };
     useEffect(() => {
         if (result !== null && gameOver) {
-            const gameData = {
-                date: new Date().toISOString(),
-                playerName: playerName,
-                result: result === 1 ? 'victoria' : result === 2 ? 'derrota' : 'empate'
-            };
+                const gameData = {
+                    fechaHora: new Date().toISOString(),
+                    nombre: playerName,
+                    resultado: result === 1 ? 'victoria' : result === 2 ? 'derrota' : 'empate'
+                };
+                console.log(gameData);
 
-            fetch('http://localhost:3005/game1', {
-                method: 'POST',
+            //     fetch('http://localhost:3000/game1', {
+            //         method: 'POST',
+            //         headers: {
+            //             'Content-Type': 'application/json'
+            //         },
+            //         body: JSON.stringify(gameData)
+            //     })
+            //         .then((response) => {
+            //             if (response.ok) {
+            //                 // Envío de datos exitoso
+            //             } else {
+            //                 // El envío de datos falló
+            //                 // Puedes manejar el error de alguna manera
+            //             }
+            //         })
+            //         .catch((error) => {
+            //             // Error al intentar enviar los datos
+            //             // Puedes manejar el error de alguna manera
+            //         });
+            fetch("http://localhost:3000/game1", {
+
+                method: "POST",
+
                 headers: {
-                    'Content-Type': 'application/json'
+
+                    "Content-Type": "application/json",
+
                 },
-                body: JSON.stringify(gameData)
+
+                body: JSON.stringify(gameData),
+
             })
-                .then((response) => {
-                    if (response.ok) {
-                        // Envío de datos exitoso
-                    } else {
-                        // El envío de datos falló
-                        // Puedes manejar el error de alguna manera
-                    }
+
+                .then((response) => response.json())
+
+                .then((data) => {
+
+                    // Manejar la respuesta de la API si es necesario
+
+                    console.log(data);
+
                 })
+
                 .catch((error) => {
-                    // Error al intentar enviar los datos
-                    // Puedes manejar el error de alguna manera
+
+                    // Manejar los errores en caso de que la solicitud falle
+
+                    console.error("Error al enviar los datos del juego:", error);
+
                 });
+            // postData();
         }
+
     }, [result, gameOver]);
 
     const handlePlay = (choice) => {
@@ -152,34 +198,6 @@ function Game() {
         if (playerName.trim() === '') {
             alert('Por favor, ingresa tu nombre antes de comenzar el juego.');
             return;
-        }
-
-        // Lógica adicional para iniciar el juego con el nombre del jugador
-        const gameData = {
-            playerName: playerName,
-            date: new Date().toISOString(), // Obtener la fecha actual en formato ISO
-            result: result === 1 ? "victoria" : result === 2 ? "derrota" : "empate" // Convertir el resultado en un texto legible
-        };
-
-        try {
-            const response = await fetch("http://localhost:3005/game1", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(gameData),
-            });
-
-            if (response.ok) {
-                // El envío de datos fue exitoso
-                // Puedes realizar acciones adicionales si es necesario
-            } else {
-                // El envío de datos falló
-                // Puedes manejar el error de alguna manera
-            }
-        } catch (error) {
-            // Error al intentar enviar los datos
-            // Puedes manejar el error de alguna manera
         }
 
         // Restablecer el nombre del jugador después de iniciar el juego

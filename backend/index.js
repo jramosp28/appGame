@@ -23,9 +23,7 @@ app.use('/game2', game2Routes);
 
 
 // Configuración de CORS
-app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:4200']
-}));
+app.use(cors({ origin: 'http://localhost:5173' }));
 
 // Inicio del servidor
 app.listen(3000, () => console.log('Servidor iniciado en el puerto http://localhost:3000'));

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const game1Schema = new mongoose.Schema({
-    fechaHora: Date,
+    fechaHora: String,
     nombre: String,
     resultado: String
     

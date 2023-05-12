@@ -1,9 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import Home from '../../frontend2/src/components/Home';
-import Game1 from '../../frontend2/src/components/Game1';
-import Game2 from '../../frontend2/src/components/Game2';
-import Records from '../../frontend2/src/components/Records';
+import Home from './components/Home';
+import Game1 from './components/Game1';
+import Game2 from './components/Game2';
+import Records from './components/Records';
 
 import "./index.css";
 
