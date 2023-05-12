@@ -1,9 +1,5 @@
 import { useState, useEffect } from "react";
 import './Game1.css';
-import axios from 'axios';
-import { createGameInDatabase } from './services';
-
-
 
 const options = [
     { id: 0, name: "Piedra", emoji: "✊", beats: [2, 3] },
@@ -45,6 +41,9 @@ function useChoices() {
     const [computerMessage, setComputerMessage] = useState(null);
     const [result, setResult] = useState(null);
     const [disabled, setDisabled] = useState(false);
+    const [gameOver, setGameOver] = useState(false);
+    const [playerName, setPlayerName] = useState('');
+
 
     useEffect(() => {
         if (userChoice !== null) {
@@ -62,6 +61,36 @@ function useChoices() {
         }
     }, [computerChoice]);
 
+    useEffect(() => {
+        if (result !== null && gameOver) {
+            const gameData = {
+                date: new Date().toISOString(),
+                playerName: playerName,
+                result: result === 1 ? 'victoria' : result === 2 ? 'derrota' : 'empate'
+            };
+
+            fetch('http://localhost:3005/game1', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(gameData)
+            })
+                .then((response) => {
+                    if (response.ok) {
+                        // Envío de datos exitoso
+                    } else {
+                        // El envío de datos falló
+                        // Puedes manejar el error de alguna manera
+                    }
+                })
+                .catch((error) => {
+                    // Error al intentar enviar los datos
+                    // Puedes manejar el error de alguna manera
+                });
+        }
+    }, [result, gameOver]);
+
     const handlePlay = (choice) => {
         setUserChoice(choice);
         setDisabled(true);
@@ -73,9 +102,8 @@ function useChoices() {
 
         setTimeout(() => {
             setResult(getResult(choice, randomChoice));
+            setGameOver(true); // Agregamos esta línea para indicar que el juego ha terminado
         }, 3000);
-
-        clearTimeout();
     };
 
     const reset = () => {
@@ -85,6 +113,7 @@ function useChoices() {
         setComputerMessage(null);
         setResult(null);
         setDisabled(false);
+        setGameOver(false);
     };
 
     return {
@@ -112,6 +141,7 @@ function Game() {
     } = useChoices();
 
     const [playerName, setPlayerName] = useState('');
+    const [gameStarted, setGameStarted] = useState(false);
 
     const handleNameChange = (event) => {
         setPlayerName(event.target.value);
@@ -127,62 +157,90 @@ function Game() {
         // Lógica adicional para iniciar el juego con el nombre del jugador
         const gameData = {
             playerName: playerName,
-            // Otros datos que necesites enviar a la base de datos
+            date: new Date().toISOString(), // Obtener la fecha actual en formato ISO
+            result: result === 1 ? "victoria" : result === 2 ? "derrota" : "empate" // Convertir el resultado en un texto legible
         };
 
-        // Llamar a una función para crear el juego en la base de datos con los datos proporcionados
-        await createGameInDatabase(gameData); // Reemplaza "createGameInDatabase" con la función correspondiente
+        try {
+            const response = await fetch("http://localhost:3005/game1", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(gameData),
+            });
+
+            if (response.ok) {
+                // El envío de datos fue exitoso
+                // Puedes realizar acciones adicionales si es necesario
+            } else {
+                // El envío de datos falló
+                // Puedes manejar el error de alguna manera
+            }
+        } catch (error) {
+            // Error al intentar enviar los datos
+            // Puedes manejar el error de alguna manera
+        }
 
         // Restablecer el nombre del jugador después de iniciar el juego
         setPlayerName('');
+        setGameStarted(true);
+    };
+
+    const handlePlayAgain = () => {
+        reset();
+        setGameStarted(false);
     };
 
     return (
         <div className="container">
             <h1 className="title">¡A jugar!</h1>
 
-            <input
-                type="text"
-                value={playerName}
-                onChange={handleNameChange}
-                placeholder="Ingresa tu nombre"
-            />
-
-            <button className="start-game" onClick={handleStartGame}>
-                Comenzar juego
-            </button>
-
-            {options.map((option) => (
-                <button
-                    key={option.id}
-                    className="button"
-                    onClick={() => handlePlay(option.id)}
-                    disabled={disabled}
-                    title={option.name}
-                >
-                    {option.emoji}
-                </button>
-            ))}
-            {userChoice !== null && <p className="message">{userMessage}</p>}
-            {computerChoice !== null && <p className="message">{computerMessage}</p>}
-            {result !== null && (
+            {!gameStarted ? (
                 <div>
-                    {result === 0 && <p className="result">Empate 🤷🏽‍♀️</p>}
-                    {result === 1 && (
-                        <p className="result">
-                            ✅ Has ganado con {options[userChoice]?.name} contra{" "}
-                            {options[computerChoice]?.name}
-                        </p>
-                    )}
-                    {result === 2 && (
-                        <p className="result">
-                            ❌ Has perdido con {options[userChoice]?.name} contra{" "}
-                            {options[computerChoice]?.name}
-                        </p>
-                    )}
-                    <button className="play-again" onClick={reset}>
-                        Jugar de nuevo
+                    <input
+                        type="text"
+                        value={playerName}
+                        onChange={handleNameChange}
+                        placeholder="Ingresa tu nombre"
+                    />
+
+                    <button className="start-game" onClick={handleStartGame}>
+                        Comenzar juego
                     </button>
+                </div>
+            ) : (
+                <div>
+                    {options.map((option) => (
+                        <OptionButton
+                            key={option.id}
+                            option={option}
+                            handlePlay={handlePlay}
+                            disabled={disabled}
+                        />
+                    ))}
+                    {userChoice !== null && <p className="message">{userMessage}</p>}
+                    {computerChoice !== null && <p className="message">{computerMessage}</p>}
+                    {result !== null && (
+                        <div>
+                            {result === 0 && <p className="result">Empate 🤷🏽‍♀️</p>}
+                            {result === 1 && (
+                                <p className="result">
+                                    ✅ Has ganado con {options[userChoice]?.name} contra{" "}
+                                    {options[computerChoice]?.name}
+                                </p>
+                            )}
+                            {result === 2 && (
+                                <p className="result">
+                                    ❌ Has perdido con {options[userChoice]?.name} contra{" "}
+                                    {options[computerChoice]?.name}
+                                </p>
+                            )}
+                            <button className="play-again" onClick={handlePlayAgain}>
+                                Jugar de nuevo
+                            </button>
+                        </div>
+                    )}
                 </div>
             )}
         </div>
