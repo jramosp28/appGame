@@ -10,3 +10,14 @@ exports.getAllGames = async (req, res) => {
         res.status(500).send('Error al obtener la colección de juegos');
     }
 };
+
+exports.crearPartida = async (req, res) => {
+    try {
+      const partida = new Game1(req.body);
+     
+      await partida.save();
+      res.json(partida);
+    } catch (error) {
+      res.status(400).json({ message: error.message })
+    }
+  };

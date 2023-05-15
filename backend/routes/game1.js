@@ -17,17 +17,18 @@ router.get("/:_id", async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 });
+router.post('/', GameController.crearPartida);
 
 // Crear un nuevo juego
-router.post("/", async (req, res) => {
-  try {
-    const gameData = req.body;
-    await GameController.createGameInDatabase(gameData);
-    res.status(201).json({ message: 'Juego creado exitosamente' });
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-});
+// router.post("/", async (req, res) => {
+//   try {
+//     const gameData = req.body;
+//     await GameController.createGameInDatabase(gameData);
+//     res.status(201).json({ message: 'Juego creado exitosamente' });
+//   } catch (err) {
+//     res.status(400).json({ message: err.message });
+//   }
+// });
 
 // Actualizar un juego existente
 router.put("/:id", async (req, res) => {

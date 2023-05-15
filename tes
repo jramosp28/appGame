@@ -1,0 +1,17 @@
+[
+  {
+    "fechaHora": "2023-05-15 10:30",
+    "nombre": "Ejemplo 1",
+    "resultado": "Resultado 1"
+  },
+  {
+    "fechaHora": "2023-05-15 14:45",
+    "nombre": "Ejemplo 2",
+    "resultado": "Resultado 2"
+  },
+  {
+    "fechaHora": "2023-05-15 18:15",
+    "nombre": "Ejemplo 3",
+    "resultado": "Resultado 3"
+  }
+]
