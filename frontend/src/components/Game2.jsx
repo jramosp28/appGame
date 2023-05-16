@@ -39,29 +39,55 @@ function Tamagotchi() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setHunger(hunger + 1);
-      setHappiness(happiness - 1);
-      setHealth(health - 1);
+      setHunger((prevHunger) => prevHunger + 1);
+      setHappiness((prevHappiness) => prevHappiness - 1);
+      setHealth((prevHealth) => prevHealth - 1);
     }, 3000);
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const gameData = {
+      hunger,
+      happiness,
+      health,
+    };
+
+    fetch("http://localhost:3000/game2/", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(gameData),
+    })
+      .then((response) => {
+        if (response.ok) {
+          console.log('Datos del juego enviados correctamente.');
+        } else {
+          console.log('Error al enviar los datos del juego.');
+        }
+      })
+      .catch((error) => {
+        console.log('Error en la solicitud POST:', error);
+      });
   }, [hunger, happiness, health]);
 
   const feed = () => {
-    setHunger(Math.max(0, hunger - 20));
-    setHappiness(Math.min(100, happiness + 5));
-    setHealth(Math.min(100, health + 5));
+    setHunger((prevHunger) => Math.max(0, prevHunger - 20));
+    setHappiness((prevHappiness) => Math.min(100, prevHappiness + 5));
+    setHealth((prevHealth) => Math.min(100, prevHealth + 5));
   };
 
   const play = () => {
-    setHunger(Math.min(100, hunger + 5));
-    setHappiness(Math.min(100, happiness + 20));
-    setHealth(Math.max(0, health - 5));
+    setHunger((prevHunger) => Math.min(100, prevHunger + 5));
+    setHappiness((prevHappiness) => Math.min(100, prevHappiness + 20));
+    setHealth((prevHealth) => Math.max(0, prevHealth - 5));
   };
 
   const sleep = () => {
-    setHunger(Math.max(0, hunger - 5));
-    setHappiness(Math.max(0, happiness - 5));
-    setHealth(Math.min(100, health + 10));
+    setHunger((prevHunger) => Math.max(0, prevHunger - 5));
+    setHappiness((prevHappiness) => Math.max(0, prevHappiness - 5));
+    setHealth((prevHealth) => Math.min(100, prevHealth + 10));
   };
 
   return (

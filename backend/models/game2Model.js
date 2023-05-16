@@ -1,12 +1,32 @@
 const mongoose = require('mongoose');
 
 const game2Schema = new mongoose.Schema({
-    nombreMascota: String,
-    hambre: Number,
-    energia: Number,
-    felicidad: Number,
-    fNacimiento: Date
-
+    nombreMascota: {
+        type: String,
+        required: true
+      },
+    hambre: {
+        type: Number,
+        default: 100,
+        min: 0,
+        max: 100
+      },
+    energia: {
+        type: Number,
+        default: 100,
+        min: 0,
+        max: 100
+      },
+    felicidad: {
+        type: Number,
+        default: 100,
+        min: 0,
+        max: 100
+      },
+    fechaNacimiento: {
+        type: Date,
+        required: true
+      }
 }, { versionKey: false });
 
 const Game2 = mongoose.model('Game2', game2Schema);

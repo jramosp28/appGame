@@ -10,3 +10,15 @@ exports.getAllGames = async (req, res) => {
         res.status(500).send('Error al obtener la colección de juegos');
     }
 };
+
+exports.createTamagotchi = async (req, res) => {
+    try {
+      const tamagotchi = new Game2(req.body)
+      console.log(tamagotchi);
+      console.log(req.body);
+      await tamagotchi.save()
+      res.status(201).json(tamagotchi)
+    } catch (error) {
+      res.status(400).json({ message: error.message })
+    }
+  }

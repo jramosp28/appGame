@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import './Game1.css';
-// import axios from 'axios';
+import "./Game1.css";
+
 const options = [
     { id: 0, name: "Piedra", emoji: "✊", beats: [2, 3] },
     { id: 1, name: "Papel", emoji: "🧻", beats: [0] },
@@ -42,8 +42,7 @@ function useChoices() {
     const [result, setResult] = useState(null);
     const [disabled, setDisabled] = useState(false);
     const [gameOver, setGameOver] = useState(false);
-    const [playerName, setPlayerName] = useState('usuario');
-
+    const [playerName, setPlayerName] = useState("usuario");
 
     useEffect(() => {
         if (userChoice !== null) {
@@ -56,81 +55,40 @@ function useChoices() {
     useEffect(() => {
         if (computerChoice !== null) {
             setComputerMessage(
-                `El ordenador ha elegido ${options[computerChoice]?.emoji} - ${options[computerChoice]?.name}`
+                `El ordenador ha elegido ${options[computerChoice]?.emoji} - ${options[computerChoice]?.name
+                }`
             );
         }
     }, [computerChoice]);
-    // const postData = async () => {
-    //     const data = {
-    //         fechaHora: new Date().toISOString(),
-    //         nombre: playerName,
-    //         resultado: result === 1 ? 'victoria' : result === 2 ? 'derrota' : 'empate'
-    //     };
-    //     try {
-    //         const response = await axios.post('http://localhost:3000/game1', data);
-    //         console.log("RESPONSE", response.data);
-    //     } catch (err) {
-    //         console.log(err);
-    //     }
-    // };
+
     useEffect(() => {
         if (result !== null && gameOver) {
-                const gameData = {
-                    
-                    jugador: playerName,
-                    resultado: result === 1 ? 'victoria' : result === 2 ? 'derrota' : 'empate'
-                };
-                console.log(gameData);
+            const gameData = {
+                jugador: playerName,
+                resultado:
+                    result === 1 ? "victoria" : result === 2 ? "derrota" : "empate",
+            };
+            console.log(gameData);
 
-            //     fetch('http://localhost:3000/game1', {
-            //         method: 'POST',
-            //         headers: {
-            //             'Content-Type': 'application/json'
-            //         },
-            //         body: JSON.stringify(gameData)
-            //     })
-            //         .then((response) => {
-            //             if (response.ok) {
-            //                 // Envío de datos exitoso
-            //             } else {
-            //                 // El envío de datos falló
-            //                 // Puedes manejar el error de alguna manera
-            //             }
-            //         })
-            //         .catch((error) => {
-            //             // Error al intentar enviar los datos
-            //             // Puedes manejar el error de alguna manera
-            //         });
             fetch("http://localhost:3000/game1/", {
-
                 method: "POST",
-
                 headers: {
-
                     "Content-Type": "application/json",
-
                 },
-
                 body: JSON.stringify(gameData),
-
             })
-            .then((response) => {
-                if (response.ok) {
-                    console.log('Datos de la partida enviados correctamente.');
-                } else {
-                    
-                    console.log('Error al enviar los datos de la partida.');
-                }
-            })
-            .catch((error) => {
-                console.log('Error en la solicitud POST:', error);
-            });
-    
-            // postData();
+                .then((response) => {
+                    if (response.ok) {
+                        console.log("Datos de la partida enviados correctamente.");
+                    } else {
+                        console.log("Error al enviar los datos de la partida.");
+                    }
+                })
+                .catch((error) => {
+                    console.log("Error en la solicitud POST:", error);
+                });
         }
-
     }, [result, gameOver]);
-
     const handlePlay = (choice) => {
         setUserChoice(choice);
         setDisabled(true);
@@ -142,7 +100,7 @@ function useChoices() {
 
         setTimeout(() => {
             setResult(getResult(choice, randomChoice));
-            setGameOver(true); // Agregamos esta línea para indicar que el juego ha terminado
+            setGameOver(true);
         }, 3000);
     };
 
@@ -187,14 +145,12 @@ function Game() {
         setPlayerName(event.target.value);
     };
 
-    const handleStartGame = async () => {
-        // Validar si se ingresó un nombre antes de comenzar el juego
+    const handleStartGame = () => {
         if (playerName.trim() === '') {
             alert('Por favor, ingresa tu nombre antes de comenzar el juego.');
             return;
         }
 
-        // Restablecer el nombre del jugador después de iniciar el juego
         setPlayerName('');
         setGameStarted(true);
     };
