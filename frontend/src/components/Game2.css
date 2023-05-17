@@ -5,38 +5,105 @@
   color: white;
   text-align: center;
 }
-.state{
-  width: 30em;
+
+.state {
+  width: 200px;
+  height: 200px;
   margin: 1em;
-  border: black solid;
-  
+  border: 2px solid black;
+  border-radius: 50%;
+  object-fit: cover;
 }
-.main{
+
+.main {
   margin-top: 2em;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
-.screen{
-  border: black 2px solid;
-  border-radius: 5em;
+
+.screen {
+  border: 2px solid black;
+  border-radius: 1em;
   padding: 2em;
   background-color: aqua;
+  max-width: 400px;
+  width: 100%;
 }
-.buttImg{
+
+.buttImg {
   width: 3em;
   height: 3em;
 }
-.btt{
+
+.btt {
   width: 5em;
   height: 5em;
-  
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
 }
-.butts{
+
+.butts {
   display: flex;
   justify-content: space-around;
+  margin-top: 2em;
 }
-.stats{
+
+.stats {
   text-align: left;
+  margin-top: 2em;
+}
+
+.text-input {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.text-input input {
+  border: 2px solid gray;
+  padding: 0.5em;
+  border-radius: 5px;
+}
+
+.text-input button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5em 1em;
+  margin-left: 0.5em;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.death-message {
+  margin-top: 2em;
+  text-align: center;
+}
+
+.restart-button {
+  margin-top: 2em;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5em 1em;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.link-button {
+  margin-top: 2em;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5em 1em;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.link-button:hover {
+  background-color: #0056b3;
 }

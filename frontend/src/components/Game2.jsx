@@ -8,6 +8,7 @@ import dead from "../assets/dead.webp";
 import playImg from "../assets/play.png";
 import sleepImg from "../assets/sleep.png";
 import feedImg from "../assets/feed.png";
+
 function Tamagotchi() {
   const [name, setName] = useState("Tamagotchi");
   const [nameInput, setNameInput] = useState("");
@@ -87,16 +88,22 @@ function Tamagotchi() {
     setAge(0);
     setDate("");
   };
+
+  const fechaNacimiento = new Date();
+
   const handleDeath = () => {
     clearInterval(intervalId);
     setIsDead(true);
      // Datos a enviar a la API
+
+  
+  
   const tamagotchiData = {
-    fechaNacimiento: date,
-    nombre: name,
-    nivelHambre: hunger,
-    nivelEnergia: energy,
-    nivelFelicidad: happiness,
+    nombreMascota: name,
+    hambre: hunger,
+    energia: energy,
+    felicidad: happiness,
+    fechaNacimiento: fechaNacimiento
   };
 
   // Realizar la solicitud POST a la API
